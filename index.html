@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYS Trailer Registration Fee Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Bebas Neue", cursive;
+            color: #FFFFFF;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        h3 {
+            font-size: 30px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        p, label, div, span {
+            font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        /* Layout */
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            background-color: #333333;
+            color: #FFFFFF;
+            font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Hide number input arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #F1FF22;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            height: 3em;
+        }
+
+        button:hover {
+            background-color: #d8e61f;
+        }
+
+        /* Logo */
+        .logo-container {
+            margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .logo-img {
+            margin-bottom: 5px;
+            max-width: 240px;
+            height: auto;
+        }
+
+        /* Result card */
+        .result-card {
+            background-color: #F1FF22;
+            color: #000000;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(241, 255, 34, 0.2);
+            text-align: center;
+            display: none;
+        }
+
+        .result-card h2 {
+            color: #000000;
+            font-family: "Bebas Neue", cursive;
+            font-size: 44px;
+            margin-bottom: 20px;
+        }
+
+        .total-fee {
+            background-color: #000000; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            text-align: center;
+        }
+
+        .total-fee h3 {
+            margin: 0; 
+            font-size: 28px;
+            color: #FFFFFF;
+        }
+
+        /* Fee breakdown */
+        .fee-breakdown {
+            background-color: #333333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .fee-breakdown h4 {
+            color: #F1FF22;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .fee-item.total {
+            border-top: 1px solid #666666;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* Toggle button */
+        .toggle-breakdown {
+            background-color: transparent;
+            border: 1px solid #FFFFFF;
+            color: #FFFFFF;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            display: block;
+            width: auto;
+            height: auto;
+            margin: 10px auto;
+        }
+
+        .toggle-breakdown:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* County surcharge notice */
+        .surcharge-notice {
+            color: #F1FF22;
+            font-weight: bold;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            h3 {
+                font-size: 24px;
+            }
+
+            .column {
+                flex: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="assets/OFFICIAL-LOGO-Black-Background.jpg" class="logo-img" alt="Logo" width="240" height="122">
+        </div>
+
+        <h1>NYS Trailer Registration Fee Calculator</h1>
+        
+        <div class="columns">
+            <div class="column">
+                <h3>Trailer Specifications</h3>
+                
+                <div class="form-group">
+                    <label for="unladen-weight">Unladen Weight (lbs)</label>
+                    <input type="number" id="unladen-weight" placeholder="Enter Unladen Weight" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gvwr">Gross Vehicle Weight Rating (GVWR) (lbs)</label>
+                    <input type="number" id="gvwr" placeholder="Enter GVWR" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="county">County</label>
+                    <select id="county">
+                        <!-- County options will be populated by JavaScript -->
+                    </select>
+                    <div id="surcharge-notice" class="surcharge-notice">This county has a $25.00 surcharge</div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h3>Registration Details</h3>
+                
+                <div class="form-group">
+                    <label for="reg-date">Registration Date</label>
+                    <input type="date" id="reg-date">
+                </div>
+                
+                <div id="two-year-container" class="checkbox-group" style="display: none;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="two-year-registration">
+                        Apply for a 2-year registration
+                    </label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="financing-option">
+                        Trailer has a lien/financing (add $5.00)
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <button id="calculate-button">Calculate Registration Fee</button>
+        
+        <div id="result-card" class="result-card">
+            <h2>Registration Fee Calculation</h2>
+            <div class="total-fee">
+                <h3 id="total-fee-display">Total Due: $0.00</h3>
+            </div>
+            
+            <button id="toggle-breakdown" class="toggle-breakdown">View Fee Breakdown</button>
+            
+            <div id="fee-breakdown" class="fee-breakdown">
+                <h4>Fee Breakdown</h4>
+                <div class="fee-item">
+                    <span>Registration Fee:</span>
+                    <span id="registration-fee">$0.00</span>
+                </div>
+                <div id="title-fee-item" class="fee-item" style="display: none;">
+                    <span>Title Fee:</span>
+                    <span id="title-fee">$0.00</span>
+                </div>
+                <div id="county-surcharge-item" class="fee-item" style="display: none;">
+                    <span>County Surcharge:</span>
+                    <span id="county-surcharge">$0.00</span>
+                </div>
+                <div id="financing-fee-item" class="fee-item" style="display: none;">
+                    <span>Trailer Financing Fee:</span>
+                    <span id="financing-fee">$0.00</span>
+                </div>
+                <div class="fee-item">
+                    <span>Flat Fee:</span>
+                    <span id="flat-fee">$0.00</span>
+                </div>
+                <div class="fee-item total">
+                    <span>Total:</span>
+                    <span id="total-fee">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants from the NYS DMV formula
+        const FEE_PER_500_LBS = 5.39;
+        const MINIMUM_FEE = 14.38;
+        const TITLE_FEE = 50.00;
+        const COUNTY_SURCHARGE = 25.00;
+        const FINANCING_FEE = 5.00;
+        const FLAT_FEE = 12.50;
+
+        // NY Counties list
+        const NY_COUNTIES = [
+            "Albany", "Allegany", "Bronx", "Broome", "Cattaraugus", "Cayuga", "Chautauqua", 
+            "Chemung", "Chenango", "Clinton", "Columbia", "Cortland", "Delaware", "Dutchess", 
+            "Erie", "Essex", "Franklin", "Fulton", "Genesee", "Greene", "Hamilton", "Herkimer", 
+            "Jefferson", "Kings", "Lewis", "Livingston", "Madison", "Monroe", "Montgomery", 
+            "Nassau", "New York", "Niagara", "Oneida", "Onondaga", "Ontario", "Orange", 
+            "Orleans", "Oswego", "Otsego", "Putnam", "Queens", "Rensselaer", "Richmond", 
+            "Rockland", "Saint Lawrence", "Saratoga", "Schenectady", "Schoharie", "Schuyler", 
+            "Seneca", "Steuben", "Suffolk", "Sullivan", "Tioga", "Tompkins", "Ulster", 
+            "Warren", "Washington", "Wayne", "Westchester", "Wyoming", "Yates"
+        ];
+
+        // List of counties with surcharge
+        const SURCHARGE_COUNTIES = [
+            "Bronx", "Kings", "New York", "Queens", "Richmond", "Dutchess", 
+            "Nassau", "Orange", "Putnam", "Rockland", "Suffolk", "Westchester"
+        ];
+
+        // DOM elements
+        const countySelect = document.getElementById('county');
+        const surchargeNotice = document.getElementById('surcharge-notice');
+        const regDateInput = document.getElementById('reg-date');
+        const twoYearContainer = document.getElementById('two-year-container');
+        const twoYearCheckbox = document.getElementById('two-year-registration');
+        const financingCheckbox = document.getElementById('financing-option');
+        const calculateButton = document.getElementById('calculate-button');
+        const resultCard = document.getElementById('result-card');
+        const totalFeeDisplay = document.getElementById('total-fee-display');
+        const toggleBreakdown = document.getElementById('toggle-breakdown');
+        const feeBreakdown = document.getElementById('fee-breakdown');
+        const registrationFeeElement = document.getElementById('registration-fee');
+        const titleFeeElement = document.getElementById('title-fee');
+        const titleFeeItem = document.getElementById('title-fee-item');
+        const countySurchargeElement = document.getElementById('county-surcharge');
+        const countySurchargeItem = document.getElementById('county-surcharge-item');
+        const financingFeeElement = document.getElementById('financing-fee');
+        const financingFeeItem = document.getElementById('financing-fee-item');
+        const flatFeeElement = document.getElementById('flat-fee');
+        const totalFeeElement = document.getElementById('total-fee');
+
+        // Initialize the form
+        function initializeForm() {
+            // Populate county select
+            NY_COUNTIES.forEach(county => {
+                const option = document.createElement('option');
+                option.value = county;
+                option.textContent = county;
+                if (county === 'Fulton') {
+                    option.selected = true;
+                }
+                countySelect.appendChild(option);
+            });
+
+            // Set default date to today
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            regDateInput.value = formattedDate;
+            
+            // Check if we need to show two-year registration option
+            checkTwoYearOption();
+
+            // Add event listeners
+            countySelect.addEventListener('change', updateSurchargeNotice);
+            regDateInput.addEventListener('change', checkTwoYearOption);
+            calculateButton.addEventListener('click', calculateFee);
+            toggleBreakdown.addEventListener('click', toggleFeeBreakdown);
+
+            // Initial update of surcharge notice
+            updateSurchargeNotice();
+        }
+
+        // Update surcharge notice based on selected county
+        function updateSurchargeNotice() {
+            const selectedCounty = countySelect.value;
+            if (SURCHARGE_COUNTIES.includes(selectedCounty)) {
+                surchargeNotice.style.display = 'block';
+            } else {
+                surchargeNotice.style.display = 'none';
+            }
+        }
+
+        // Check if we should show two-year registration option (only after Oct 1)
+        function checkTwoYearOption() {
+            const regDate = new Date(regDateInput.value);
+            const month = regDate.getMonth() + 1; // JavaScript months are 0-indexed
+            const day = regDate.getDate();
+            
+            // Show two-year option if date is October 1st or later
+            if (month > 10 || (month === 10 && day >= 1)) {
+                twoYearContainer.style.display = 'block';
+            } else {
+                twoYearContainer.style.display = 'none';
+                twoYearCheckbox.checked = false;
+            }
+        }
+
+        // Round to the nearest quarter (0.25)
+        function roundToNearestQuarter(value) {
+            // Convert to cents, then divide by 25 to get quarter units
+            const quarters = (value * 100) / 25;
+            // Round up to the next quarter and convert back to dollars
+            const roundedQuarters = Math.ceil(quarters);
+            return roundedQuarters * 25 / 100;
+        }
+
+        // Calculate the registration fee
+        function calculateFee() {
+            // Get input values
+            const unladenWeightStr = document.getElementById('unladen-weight').value;
+            const gvwrStr = document.getElementById('gvwr').value;
+            const county = countySelect.value;
+            const regDate = new Date(regDateInput.value);
+            const twoYearRegistration = twoYearCheckbox.checked;
+            const financingOption = financingCheckbox.checked;
+            
+            // Validate inputs
+            let unladen = parseInt(unladenWeightStr) || 0;
+            let gvwr = parseInt(gvwrStr) || 0;
+            
+            if (unladen === 0 || gvwr === 0) {
+                alert('Please enter valid weight values.');
+                return;
+            }
+            
+            if (gvwr < unladen) {
+                gvwr = unladen;
+            }
+            
+            // Calculate weight category (500 lb increments, rounded up)
+            const weightCategory = Math.ceil(gvwr / 500);
+            
+            // Calculate annual fee
+            let annualFee = weightCategory * FEE_PER_500_LBS;
+            
+            // Apply minimum fee if necessary
+            if (annualFee < MINIMUM_FEE) {
+                annualFee = MINIMUM_FEE;
+            }
+            
+            // Round annual fee to nearest 25 cents
+            annualFee = roundToNearestQuarter(annualFee);
+            
+            // Calculate days remaining in the year
+            const yearEnd = new Date(regDate.getFullYear(), 11, 31); // December 31
+            const daysInYear = (regDate.getFullYear() % 4 === 0) ? 366 : 365; // Account for leap years
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const daysRemaining = Math.round((yearEnd - regDate) / msPerDay) + 1; // Include registration day
+            
+            // Pro-rate the fee for current year
+            const proRateFactor = daysRemaining / daysInYear;
+            let proRatedFee = annualFee * proRateFactor;
+            
+            // Calculate full fees
+            let registrationFee = proRatedFee;
+            
+            // Apply 2-year registration if selected (add next full year)
+            let nextYearFee = 0;
+            if (twoYearRegistration) {
+                nextYearFee = annualFee;
+                registrationFee += nextYearFee;
+            }
+            
+            // Add title fee if unladen weight is 1000 lbs or more
+            let titleFee = 0;
+            if (unladen >= 1000) {
+                titleFee = TITLE_FEE;
+            }
+            
+            // Add county surcharge if applicable
+            let countySurcharge = 0;
+            if (SURCHARGE_COUNTIES.includes(county)) {
+                countySurcharge = COUNTY_SURCHARGE;
+            }
+            
+            // Add financing fee if option is selected
+            let financingFee = 0;
+            if (financingOption) {
+                financingFee = FINANCING_FEE;
+            }
+            
+            // Add flat fee to all registrations
+            const flatFee = FLAT_FEE;
+            
+            // Calculate total fee
+            const totalFee = registrationFee + titleFee + countySurcharge + financingFee + flatFee;
+            
+            // Format amounts as currency
+            const formatCurrency = (amount) => {
+                return '$' + amount.toFixed(2);
+            };
+            
+            // Update the UI with the calculation results
+            totalFeeDisplay.textContent = 'Total Due: ' + formatCurrency(totalFee);
+            registrationFeeElement.textContent = formatCurrency(registrationFee);
+            
+            // Show/hide optional fees
+            if (titleFee > 0) {
+                titleFeeItem.style.display = 'flex';
+                titleFeeElement.textContent = formatCurrency(titleFee);
+            } else {
+                titleFeeItem.style.display = 'none';
+            }
+            
+            if (countySurcharge > 0) {
+                countySurchargeItem.style.display = 'flex';
+                countySurchargeElement.textContent = formatCurrency(countySurcharge);
+            } else {
+                countySurchargeItem.style.display = 'none';
+            }
+            
+            if (financingFee > 0) {
+                financingFeeItem.style.display = 'flex';
+                financingFeeElement.textContent = formatCurrency(financingFee);
+            } else {
+                financingFeeItem.style.display = 'none';
+            }
+            
+            flatFeeElement.textContent = formatCurrency(flatFee);
+            totalFeeElement.textContent = formatCurrency(totalFee);
+            
+            // Show the result card
+            resultCard.style.display = 'block';
+            
+            // Reset fee breakdown visibility
+            feeBreakdown.style.display = 'none';
+            toggleBreakdown.textContent = 'View Fee Breakdown';
+        }
+
+        // Toggle fee breakdown visibility
+        function toggleFeeBreakdown() {
+            if (feeBreakdown.style.display === 'none') {
+                feeBreakdown.style.display = 'block';
+                toggleBreakdown.textContent = 'Hide Fee Breakdown';
+            } else {
+                feeBreakdown.style.display = 'none';
+                toggleBreakdown.textContent = 'View Fee Breakdown';
+            }
+        }
+
+        // Initialize the form when the page loads
+        document.addEventListener('DOMContentLoaded', initializeForm);
+    </script>
+</body>
+</html>
